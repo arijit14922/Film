@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Hall & OTT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: calc(12px + 0.5vw);
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      font-family: 'DM Sans', sans-serif;
+      padding: 16px;
+      gap: 12px;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+
+    @media (min-width: 768px) {
+      body { padding: 32px; }
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 1400px;
+      min-width: max-content;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .top-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .top-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 1400px;
+      min-width: max-content;
+    }
+
+    @media (min-width: 768px) {
+      .container { flex-direction: row; }
+    }
+
+    .box-hall { 
+      flex: 0 0 auto;
+      min-width: 0;
+    }
+    .box-ott  { flex: 1; min-width: 0; }
+
+    @media (max-width: 767px) {
+      .box-hall { width: 100%; }
+      .box-ott { width: 100%; }
+    }
+
+    @media (min-width: 768px) {
+      .box-hall { flex: 0 0 360px; }
+    }
+
+    .box {
+      flex: 1;
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @media (min-width: 768px) {
+      .box {
+        border-radius: 24px;
+        padding: 36px 32px 32px;
+      }
+    }
+
+    .box-hall {
+      background: linear-gradient(135deg, #00c97a 0%, #00a86b 40%, #007a50 100%);
+      animation-delay: 0s;
+    }
+
+    .box-ott {
+      background: linear-gradient(135deg, #2979ff 0%, #1565c0 40%, #0d47a1 100%);
+      animation-delay: 0.15s;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .box::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    .box-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .box-title { font-size: 2.6rem; margin-bottom: 28px; }
+    }
+
+    .table-wrap {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      color: #fff;
+      min-width: 650px;
+    }
+
+    thead tr {
+      background: transparent;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 11px 14px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.2s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    tbody td {
+      padding: 11px 14px;
+      color: rgba(255,255,255,0.92);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    tbody td[contenteditable="true"] {
+      outline: none;
+      cursor: text;
+      transition: background 0.2s;
+      border-radius: 6px;
+    }
+    tbody td[contenteditable="true"]:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    tbody td[contenteditable="true"]:focus {
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.35);
+    }
+
+    .delete-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      display: block;
+      margin: 0 auto;
+      white-space: nowrap;
+    }
+    .delete-btn:hover { background: rgba(255,80,80,0.4); border-color: rgba(255,100,100,0.5); }
+
+    .platform-select {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      display: block;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .platform-select:hover { background: rgba(255,255,255,0.2); }
+
+    .platform-select option {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 8px;
+    }
+
+    .drag-handle {
+      cursor: grab;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .dragging { opacity: 0.5; }
+    .drag-over { background: rgba(255,255,255,0.2) !important; }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .add-row-btn {
+      margin-top: 10px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+      z-index: 1;
+      white-space: nowrap;
+    }
+    .add-row-btn:hover { background: rgba(255,255,255,0.25); }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Page scrollbars */
+    ::-webkit-scrollbar { 
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { 
+      background: rgba(255,255,255,0.2); 
+      border-radius: 99px; 
+    }
+    ::-webkit-scrollbar-thumb:hover { 
+      background: rgba(255,255,255,0.35); 
+    }
+
+    .save-indicator {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 200, 122, 0.9);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transform: translateY(200px);
+      transition: transform 0.3s ease;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+    }
+
+    .save-indicator.show {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 480px) {
+      .save-indicator {
+        left: 20px;
+        right: 20px;
+        width: calc(100% - 40px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="top-btn" onclick="saveToGist()">💾 Save</button>
+  <button class="top-btn" onclick="openSettings()">⚙️ Settings</button>
+</div>
+
+<div class="container">
+
+  <div class="box box-hall">
+    <h1 class="box-title">Hall</h1>
+    <div class="table-wrap">
+      <table id="hall-table">
+        <thead>
+          <tr><th></th><th>Name</th><th>Date</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="drag-handle">⠿</span></td><td contenteditable="true">Movie Title</td><td contenteditable="true">Fri, Jul 18, 2026</td><td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="btn-group">
+      <button class="add-row-btn" onclick="addRow('hall-table')">+ Add Row</button>
+    </div>
+  </div>
+
+  <div class="box box-ott">
+    <h1 class="box-title">OTT</h1>
+    <div class="table-wrap">
+      <table id="ott-table">
+        <thead>
+          <tr><th></th><th>Name</th><th>Date</th><th>Platform</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="drag-handle">⠿</span></td><td contenteditable="true">Show Title</td><td contenteditable="true">Fri, Jul 18, 2026</td><td><select class="platform-select"><option>Netflix</option><option>Amazon Prime Video</option><option>JioHotstar</option><option>Zee5</option><option>SonyLIV</option></select></td><td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="btn-group">
+      <button class="add-row-btn" onclick="addRow('ott-table')">+ Add Row</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="settings-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:flex-end;justify-content:center;">
+  <div style="background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);border-radius:20px 20px 0 0;padding:36px 32px;padding-bottom:calc(36px + env(safe-area-inset-bottom,0px));width:100%;max-width:560px;font-family:'DM Sans',sans-serif;color:#fff;position:relative;max-height:90vh;overflow-y:auto;">
+    <h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;margin-bottom:6px;">⚙️ Gist Sync Settings</h2>
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:24px;">Stored only in this browser. Required for cross-device sync.</p>
+
+    <label style="display:block;font-size:0.78rem;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:6px;">GitHub Personal Access Token</label>
+    <input id="cfg-token" type="password" placeholder="Paste your token here"
+      style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;color:#fff;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:16px;">
+
+    <label style="display:block;font-size:0.78rem;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:6px;">Gist ID</label>
+    <input id="cfg-gist" type="text" placeholder="e.g. 4b2e1f8a3c9d0e7f6a5b"
+      style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;color:#fff;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px;">
+    
+    <p style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:16px;line-height:1.5;">
+      <strong>📝 Setup Instructions:</strong><br>
+      1. Go to <a href="https://github.com/settings/tokens" target="_blank" style="color:#60a5fa;">GitHub Settings → Tokens</a><br>
+      2. Click "Generate new token (classic)"<br>
+      3. Check "gist" scope → Generate → Copy token<br>
+      4. Create Gist at <a href="https://gist.github.com" target="_blank" style="color:#60a5fa;">gist.github.com</a><br>
+      5. Add file "hall-ott-data.json" → Copy Gist ID from URL
+    </p>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-bottom:12px;">
+      <button onclick="closeSettings()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:9px 20px;border-radius:999px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;">Cancel</button>
+      <button onclick="saveSettings()" style="background:rgba(255,255,255,0.92);color:#222;border:none;padding:9px 20px;border-radius:999px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer;">Save Settings</button>
+    </div>
+    <div id="settings-status" style="margin-top:12px;font-size:0.82rem;color:rgba(255,255,255,0.5);text-align:center;min-height:18px;"></div>
+  </div>
+</div>
+
+<div class="save-indicator" id="saveIndicator">✓ Saved to Gist</div>
+
+<script>
+  const PLATFORMS = ['Netflix','Amazon Prime Video','JioHotstar','Zee5','SonyLIV'];
+
+  function getTodayFormatted() {
+    const now = new Date();
+    return now.toLocaleDateString('en-US', {
+      weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+    });
+  }
+
+  function getCfg() {
+    return {
+      token: localStorage.getItem('gist-token') || '',
+      gistId: localStorage.getItem('gist-id') || ''
+    };
+  }
+
+  function openSettings() {
+    const { token, gistId } = getCfg();
+    document.getElementById('cfg-token').value = token;
+    document.getElementById('cfg-gist').value = gistId;
+    document.getElementById('settings-status').textContent = '';
+    document.getElementById('settings-modal').style.display = 'flex';
+  }
+
+  function closeSettings() {
+    document.getElementById('settings-modal').style.display = 'none';
+  }
+
+  function saveSettings() {
+    const token = document.getElementById('cfg-token').value.trim();
+    const gistId = document.getElementById('cfg-gist').value.trim();
+    
+    if (!token) {
+      document.getElementById('settings-status').textContent = '⚠️ GitHub token is required.';
+      return;
+    }
+    if (!gistId) {
+      document.getElementById('settings-status').textContent = '⚠️ Gist ID is required.';
+      return;
+    }
+
+    localStorage.setItem('gist-token', token);
+    localStorage.setItem('gist-id', gistId);
+    document.getElementById('settings-status').textContent = '✓ Saved! Loading data from Gist…';
+    setTimeout(() => { closeSettings(); loadFromGist(); }, 800);
+  }
+
+  async function loadFromGist() {
+    const { token, gistId } = getCfg();
+    if (!token || !gistId) return;
+
+    showIndicator('⏳ Loading…', false);
+    try {
+      const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+        headers: { 
+          Authorization: `token ${token}`, 
+          Accept: 'application/vnd.github+json',
+          'User-Agent': 'HallOTT-App'
+        }
+      });
+
+      if (res.status === 401) {
+        throw new Error('Invalid GitHub token. Please regenerate at github.com/settings/tokens');
+      }
+      if (res.status === 403) {
+        throw new Error('Permission denied. Check if token has "gist" scope enabled.');
+      }
+      if (res.status === 404) {
+        throw new Error('Gist not found. Please check your Gist ID.');
+      }
+      if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+
+      const gist = await res.json();
+      const file = gist.files['hall-ott-data.json'];
+      
+      if (!file) { 
+        showIndicator('Creating hall-ott-data.json in your Gist...', false);
+        await createGistFile(token, gistId);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(file.content);
+        if (!data.hall) data.hall = [];
+        if (!data.ott) data.ott = [];
+        
+        if (data.hall) renderTable('hall-table', data.hall);
+        if (data.ott)  renderTable('ott-table',  data.ott);
+        showIndicator('✓ Loaded from Gist', true);
+      } catch (jsonError) {
+        console.error('JSON Parse Error:', jsonError.message);
+        showIndicator('⚠️ Gist file has invalid JSON. Creating fresh file...', false);
+        await createGistFile(token, gistId);
+      }
+    } catch (e) {
+      console.error('Load Error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        showIndicator('⚠️ Network error. Check your internet connection.', true);
+      } else {
+        showIndicator(`⚠️ ${e.message}`, true);
+      }
+    }
+  }
+
+  async function createGistFile(token, gistId) {
+    try {
+      const payload = {
+        hall: [],
+        ott: []
+      };
+
+      const fileContent = JSON.stringify(payload, null, 2);
+
+      const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'HallOTT-App'
+        },
+        body: JSON.stringify({
+          files: {
+            'hall-ott-data.json': {
+              content: fileContent
+            }
+          }
+        })
+      });
+
+      if (res.status === 401) {
+        throw new Error('Invalid GitHub token.');
+      }
+      if (res.status === 404) {
+        throw new Error('Gist not found.');
+      }
+      if (!res.ok) throw new Error(`Failed to create file: ${res.status}`);
+      
+      showIndicator('✓ File created! Ready to use.', true);
+    } catch (e) {
+      console.error('Create File Error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        showIndicator('⚠️ Network error. Check your internet connection.', true);
+      } else {
+        showIndicator(`⚠️ ${e.message}`, true);
+      }
+    }
+  }
+
+  async function saveToGist() {
+    const { token, gistId } = getCfg();
+    if (!token || !gistId) {
+      showIndicator('⚠️ Please configure token and Gist ID first', true);
+      setTimeout(() => openSettings(), 500);
+      return;
+    }
+
+    showIndicator('⏳ Saving…', false);
+    const payload = {
+      hall: getTableData('hall-table'),
+      ott:  getTableData('ott-table')
+    };
+    
+    try {
+      const fileContent = JSON.stringify(payload, null, 2);
+      JSON.parse(fileContent);
+
+      const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'HallOTT-App'
+        },
+        body: JSON.stringify({
+          files: {
+            'hall-ott-data.json': {
+              content: fileContent
+            }
+          }
+        })
+      });
+
+      if (res.status === 401) {
+        throw new Error('Invalid GitHub token. Please regenerate your token at github.com/settings/tokens');
+      }
+      if (res.status === 403) {
+        throw new Error('Permission denied. Check if token has "gist" scope enabled. Regenerate at github.com/settings/tokens');
+      }
+      if (res.status === 404) {
+        throw new Error('Gist not found. Please check your Gist ID.');
+      }
+      if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+
+      showIndicator('✓ Saved to Gist', true);
+    } catch (e) {
+      console.error('Save Error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        showIndicator('⚠️ Network error. Check your internet connection.', true);
+      } else {
+        showIndicator(`⚠️ ${e.message}`, true);
+      }
+    }
+  }
+
+  function showIndicator(msg, autoHide) {
+    const el = document.getElementById('saveIndicator');
+    el.textContent = msg;
+    el.classList.add('show');
+    if (autoHide) setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  function platformSelect(selected) {
+    selected = (selected || '').trim() || 'Netflix';
+    const opts = PLATFORMS.map(p => `<option${p===selected?' selected':''}>${p}</option>`).join('');
+    return `<select class="platform-select">${opts}</select>`;
+  }
+
+  function getTableData(tableId) {
+    const rows = [];
+    document.querySelectorAll('#' + tableId + ' tbody tr').forEach(tr => {
+      const cells = tr.querySelectorAll('td[contenteditable]');
+      const sel = tr.querySelector('.platform-select');
+      const vals = Array.from(cells).map(c => c.innerText.trim() || '');
+      if (sel) vals.push(sel.value);
+      rows.push(vals);
+    });
+    return rows;
+  }
+
+  function renderTable(tableId, data) {
+    if (!data || !Array.isArray(data)) {
+      data = [];
+    }
+    const tbody = document.querySelector('#' + tableId + ' tbody');
+    tbody.innerHTML = '';
+    data.forEach(values => {
+      if (Array.isArray(values) && values.length > 0) {
+        tbody.appendChild(buildRow(tableId, values));
+      }
+    });
+  }
+
+  function buildRow(tableId, values) {
+    const tr = document.createElement('tr');
+    tr.draggable = true;
+    
+    // Ensure values is an array and has default values
+    if (!Array.isArray(values)) values = [];
+    
+    const handle = `<td><span class="drag-handle">⠿</span></td>`;
+    if (tableId === 'ott-table') {
+      const name = (values[0] || '').trim() || 'New Name';
+      const date = (values[1] || '').trim() || getTodayFormatted();
+      const platform = (values[2] || '').trim() || 'Netflix';
+      tr.innerHTML = `${handle}<td contenteditable="true">${name}</td><td contenteditable="true">${date}</td><td>${platformSelect(platform)}</td><td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>`;
+    } else {
+      const name = (values[0] || '').trim() || 'New Name';
+      const date = (values[1] || '').trim() || getTodayFormatted();
+      tr.innerHTML = `${handle}<td contenteditable="true">${name}</td><td contenteditable="true">${date}</td><td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>`;
+    }
+    initDrag(tr);
+    return tr;
+  }
+
+  let dragSrc = null;
+
+  function initDrag(tr) {
+    tr.addEventListener('dragstart', e => {
+      dragSrc = tr;
+      tr.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    tr.addEventListener('dragend', () => {
+      tr.classList.remove('dragging');
+      document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('drag-over'));
+    });
+    tr.addEventListener('dragover', e => {
+      e.preventDefault();
+      document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('drag-over'));
+      if (tr !== dragSrc) tr.classList.add('drag-over');
+    });
+    tr.addEventListener('drop', e => {
+      e.preventDefault();
+      if (dragSrc && dragSrc !== tr) {
+        const tbody = tr.parentNode;
+        const rows = [...tbody.querySelectorAll('tr')];
+        const srcIdx = rows.indexOf(dragSrc);
+        const tgtIdx = rows.indexOf(tr);
+        if (srcIdx < tgtIdx) tbody.insertBefore(dragSrc, tr.nextSibling);
+        else tbody.insertBefore(dragSrc, tr);
+      }
+      tr.classList.remove('drag-over');
+    });
+  }
+
+  document.querySelectorAll('tbody tr').forEach(tr => initDrag(tr));
+
+  function addRow(tableId) {
+    const tbody = document.querySelector('#' + tableId + ' tbody');
+    const tr = buildRow(tableId, []);
+    tbody.appendChild(tr);
+    tr.querySelector('td[contenteditable]').focus();
+    const { token, gistId } = getCfg();
+    if (token && gistId) saveToGist();
+  }
+
+  function deleteRow(btn) {
+    btn.closest('tr').remove();
+    const { token, gistId } = getCfg();
+    if (token && gistId) saveToGist();
+  }
+
+  document.addEventListener('input', (e) => {
+    if (e.target.tagName === 'TD' || e.target.tagName === 'SELECT') {
+      const { token, gistId } = getCfg();
+      if (token && gistId) {
+        saveToGist();
+      }
+    }
+  });
+
+  loadFromGist();
+</script>
+</body>
+</html>
