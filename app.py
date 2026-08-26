@@ -189,7 +189,7 @@ hall_column, ott_column = st.columns([0.85, 1.4], gap="large")
 
 with hall_column:
     with st.container(border=True):
-        st.header("Hall", icon=":material/theaters:")
+        st.header(":material/theaters: Hall")
         hall_edited = st.data_editor(
             st.session_state.hall,
             key=f"hall_editor_{st.session_state.editor_version}",
@@ -203,7 +203,7 @@ with hall_column:
 
 with ott_column:
     with st.container(border=True):
-        st.header("OTT", icon=":material/live_tv:")
+        st.header(":material/live_tv: OTT")
         ott_edited = st.data_editor(
             st.session_state.ott,
             key=f"ott_editor_{st.session_state.editor_version}",
@@ -223,6 +223,6 @@ with st.container(horizontal=True, horizontal_alignment="right"):
         save_to_gist(hall_edited, ott_edited)
 
 if st.session_state.gist_id:
-    st.caption("Gist sync is configured for this session.", icon=":material/check_circle:")
+    st.caption(":material/check_circle: Gist sync is configured for this session.")
 else:
-    st.caption("Gist sync is optional. Open settings to connect it.", icon=":material/info:")
+    st.caption(":material/info: Gist sync is optional. Open settings to connect it.")
